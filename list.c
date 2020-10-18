@@ -16,7 +16,7 @@
 // points to the head pointer to be initialized.
 void list_init(lnode_t **headdp)
 {
-  //TODO: your code here
+  *headdp = NULL;
 }
 
 // sum_accum is an accumulator function that adds "new_val" into the 
@@ -48,7 +48,50 @@ void sum_accum(int *existing_val, int new_val)
 bool list_insert_with_accum(lnode_t **headdp, char *key, int val, 
     void (*accum)(int *existing_val, int new_val))
 {
-  //TODO: Your code here
+  if (*headdp==NULL){
+  	lnode_t *curr=(lnode_t *)malloc(sizeof(lnode_t));
+  	curr->tuple.val = val;
+  	curr->tuple.key = key;
+  	curr->next = NULL;
+  	*headdp = curr;
+  	return true;
+  }
+  else{
+  	if (strcmp(key,(*headdp)->tuple.key)<0){
+  		lnode_t *curr = (lnode_t *)malloc(sizeof(lnode_t));
+  		curr->tuple.val = val;
+  		curr->tuple.key = key;
+  		curr->next = *headdp;
+  		*headdp = curr;
+  		return true;
+  	}
+  	if (strcmp(key,(*headdp)->tuple.key)==0){
+  		(*accum)(&((*headdp)->tuple.val),val);
+  		return false;
+  	}
+  	lnode_t* current = *headdp;
+  	while (current->next != NULL){
+  		if (strcmp(key, current->next->tuple.key)<0){
+  			lnode_t *curr=(lnode_t *)malloc(sizeof(lnode_t));
+  			curr->tuple.val = val;
+  			curr->tuple.key = key;
+  			curr->next = current->next;
+  			current->next = curr;
+  			return true;
+  		}
+  		else if(strcmp(key, current->next->tuple.key)==0){
+  			(*accum)(&(current->next->tuple.val),val);
+  			return false;
+  		}
+  		current = current->next;
+  	}
+  	lnode_t *curr = (lnode_t *)malloc(sizeof(lnode_t));
+  	curr->tuple.val = val;
+  	curr->tuple.key = key;
+  	curr->next = NULL;
+  	current->next = curr;
+  	return true;
+  }
 }
 
 // Find if a given key string exists in the sorted linked list.
@@ -60,7 +103,15 @@ bool list_insert_with_accum(lnode_t **headdp, char *key, int val,
 // You may use strcmp from C library (instead of your own string_cmp in str.h).
 int list_find(lnode_t *headp, char *key)
 {
-  // TODO: Your code here
+  while(headp != NULL){
+  	if(strcmp(key,headp->tuple.key)!=0){
+  		headp=headp->next; 		
+  	}
+  	else{
+  		return headp->tuple.val;
+  	}
+  }
+  return -1;
 }
 
 // Traverse the linked list starting from node pointed to by "headp" 
@@ -71,5 +122,11 @@ int list_find(lnode_t *headp, char *key)
 // written to "tuples".
 int list_get_all_tuples(lnode_t *headp, kv_t *tuples, int max)
 {
-  // TODO: Your code here
+  int i = 0;
+  while(headp!=NULL && i<max){
+  	tuples[i] = headp->tuple;
+  	i++;
+  	headp = headp->next;
+  }
+  return i;
 }

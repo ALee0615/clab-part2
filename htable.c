@@ -16,7 +16,11 @@
 // including all the entries in the internal hash table array.
 htable_t *htable_create(unsigned int capacity)
 {
-  //TODO: Your code here
+  htable_t *curr=(htable_t *)malloc(sizeof(htable_t));
+  lnode_t *array[capacity];
+  curr->arr = array;
+  curr->arr_capacity = capacity;
+  curr->size = 0;
 }
 
 // This function is used internally by the hash table to calculate 
@@ -27,8 +31,28 @@ htable_t *htable_create(unsigned int capacity)
 // where ^ means exponentiation.
 unsigned int hashcode(char *s)
 { 
-  //TODO: Your code here
+ int n = 0;
+ while(s[n] != '\0'){
+ 	n++;
+ }
+ int i=0;
+ int j=0;
+ int pow = 1;
+ unsigned int hashcode=0;
+ for(i;i<n;i++){
+ 	for(j=0;j<n-i-1;j++){
+ 		pow*=31;
+ 	}
+ 	hashcode += s[i]*pow;
+ 	pow = 1;
+ }
+ return hashcode;
 }
+
+ 
+  	
+
+
 
 // This function inserts a key value pair to the hash table.
 // If the key already exists, accumulate the new value into the existing value 
