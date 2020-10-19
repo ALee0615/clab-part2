@@ -37,23 +37,19 @@ unsigned int hashcode(char *s)
  }
  int i=0;
  int j=0;
- int pow = 1;
+ int exp = 1;
  unsigned int hashcode=0;
  for(i;i<n;i++){
  	for(j=0;j<n-i-1;j++){
- 		pow*=31;
+ 		exp*=31;
  	}
- 	hashcode += s[i]*pow;
- 	pow = 1;
+ 	hashcode += s[i]*exp;
+ 	exp = 1;
  }
  return hashcode;
 }
 
  
-  	
-
-
-
 // This function inserts a key value pair to the hash table.
 // If the key already exists, accumulate the new value into the existing value 
 // using the given function pointer "accum". 
@@ -69,8 +65,13 @@ unsigned int hashcode(char *s)
 void htable_put(htable_t *ht, char *key, int val, 
     void (*accum)(int *existing_val, int new_val))
 {
-  //TODO: Your code here
-
+  unsigned int hash = hashcode(key);
+  unsigned int i = hash % ht->arr_capacity;
+  if(list_find(ht->arr[i], key) == -1){
+    ht->size++;
+    //sum_accum(ht->arr[i],val);
+  }
+  list_insert_with_accum(&ht->arr[i], key, val,*accum);
 }
 
 // This function finds "key" in the hash table
@@ -83,7 +84,9 @@ void htable_put(htable_t *ht, char *key, int val,
 // list_find that you've implmeneted in list.c 
 int htable_get(htable_t *ht, char *key)
 {
-  //TODO: Your code here
+  unsigned int hash = hashcode(key);
+  unsigned int i = hash%(ht->arr_capacity);
+  return list_find((ht->arr)[i],key);
 }
 
 // Traverse the hash table pointed to by "ht" and store 
@@ -96,5 +99,17 @@ int htable_get(htable_t *ht, char *key)
 // written to "tuples".
 int htable_get_all_tuples(htable_t *ht, kv_t *tuples, int max)
 {
-  //TODO: Your code here
+  int i = 0;
+  int j = 0;
+  while(i < ht->arr_capacity){
+    while((ht->arr)[i] != NULL){
+      if(j<max){
+        tuples[j] = (ht->arr)[i]->tuple;
+        j++;
+      }
+      (ht->arr)[i] = (ht->arr)[i]->next;
+    }
+    i++;
+  }
+  return j;
 }
