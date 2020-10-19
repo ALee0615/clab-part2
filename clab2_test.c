@@ -262,7 +262,7 @@ void TestHashTable()
   assert(tuples);
   int sz = htable_get_all_tuples(ht, tuples, slen+1);
   panic_cond(sz == slen, 
-      "htable_get_all_tuples should return %d tuples instead of %d", slen, r); 
+      "htable_get_all_tuples should return %d tuples instead of %d", slen, sz); 
   for (int i = 0; i < slen; i++) {
     int j = 0;
     for (j = 0; j < slen; j++) {

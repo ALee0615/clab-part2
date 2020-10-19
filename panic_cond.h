@@ -17,6 +17,7 @@ panic_cond(int cond, const char *fmt, ...)
 		vfprintf(stderr, fmt, args);
 		fputc('\n', stderr);
 		va_end(args);
+    fflush(stdout);
 		abort();
 	}
 }
