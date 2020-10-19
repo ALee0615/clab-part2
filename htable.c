@@ -17,10 +17,10 @@
 htable_t *htable_create(unsigned int capacity)
 {
   htable_t *curr=(htable_t *)malloc(sizeof(htable_t));
-  lnode_t *array[capacity];
-  curr->arr = array;
+  curr->arr = malloc(sizeof(htable_t)*capacity);
   curr->arr_capacity = capacity;
   curr->size = 0;
+  return curr;
 }
 
 // This function is used internally by the hash table to calculate 
@@ -69,9 +69,9 @@ void htable_put(htable_t *ht, char *key, int val,
   unsigned int i = hash % ht->arr_capacity;
   if(list_find(ht->arr[i], key) == -1){
     ht->size++;
-    //sum_accum(ht->arr[i],val);
+    
   }
-  list_insert_with_accum(&ht->arr[i], key, val,*accum);
+  list_insert_with_accum(&ht->arr[i], key, val,accum);
 }
 
 // This function finds "key" in the hash table
